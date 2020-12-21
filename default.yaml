@@ -1,0 +1,57 @@
+input:
+  apk: "sample-app/app/build/outputs/apk/debug/app-debug.apk"
+  test_apk: "sample-app/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+test_suites:
+  - name: adam
+    iterations: 2
+    emulators: 15
+    device_provider:
+      docker:
+        image: "docker.io/tagantroy/docker-emulator-snapshot-android-26"
+        tag: "latest"
+    test_runner:
+      marathon:
+        program: "/home/ivanbalaksha/work/marathon-benchmark-suite/runners/marathon/bin/marathon"
+        marathon_file: MarathonfileAdam
+  - name: ddmlib
+    iterations: 2
+    emulators: 15
+    device_provider:
+      docker:
+        image: "docker.io/tagantroy/docker-emulator-snapshot-android-26"
+        tag: "latest"
+    test_runner:
+      marathon:
+        program: "/home/ivanbalaksha/work/marathon-benchmark-suite/runners/marathon/bin/marathon"
+        marathon_file: MarathonfileDDMLib
+  - name: fork
+    iterations: 2
+    emulators: 15
+    device_provider:
+      docker:
+        image: "docker.io/tagantroy/docker-emulator-snapshot-android-26"
+        tag: "latest"
+    test_runner:
+      fork:
+        program: "/home/ivanbalaksha/work/marathon-benchmark-suite/runners/fork/bin/fork-runner"
+        config_file: "fork_config.json"
+  - name: spoon
+    iterations: 2
+    emulators: 15
+    device_provider:
+      docker:
+        image: "docker.io/tagantroy/docker-emulator-snapshot-android-26"
+        tag: "latest"
+    test_runner:
+      spoon:
+        jar_file: "/home/ivanbalaksha/work/marathon-benchmark-suite/runners/spoon/spoon-runner-1.7.1-jar-with-dependencies.jar"
+  - name: spoon2
+    iterations: 2
+    emulators: 15
+    device_provider:
+      docker:
+        image: "docker.io/tagantroy/docker-emulator-snapshot-android-26"
+        tag: "latest"
+    test_runner:
+      spoon2:
+        program: "/home/ivanbalaksha/work/marathon-benchmark-suite/runners/spoon2/bin/spoon-runner"
