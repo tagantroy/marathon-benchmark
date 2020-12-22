@@ -75,7 +75,7 @@ impl TestSuiteRunner {
         let spinner = ProgressBar::new_spinner();
         spinner.enable_steady_tick(10);
         spinner.set_style(spinner_style);
-        spinner.set_prefix(&format!("Iteration #{}", idx));
+        spinner.set_prefix(&format!("[{}] Iteration #{}", self.name, idx));
 
         let file_manager = FileManager::new(
             run_config.uuid.clone(),
