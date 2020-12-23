@@ -34,10 +34,12 @@ impl DockerProvider {
             running_containers: HashMap::new(),
         }
     }
+
     async fn start_container(&mut self, idx: u32) -> Result<(), Box<dyn std::error::Error>> {
-        let port = request_open_port().unwrap();
-        let adbkey = std::fs::read_to_string("/home/ivanbalaksha/.android/adbkey")
-            .expect("cannot read ~/.android/adbkey");
+        let port = request_open_port().expect("Cannot get next open port");
+        let home_dir = home::home_dir().expect("Home dir is not available for this user");
+        let adbkey_path = home_dir.join(".android").join("adbkey");
+        let adbkey = std::fs::read_to_string(adbkey_path).expect("cannot read ~/.android/adbkey");
 
         let image = format!("{}:{}", self.image, self.tag);
         let adb_key_env = format!("ADBKEY=\"{}\"", adbkey);
@@ -52,7 +54,7 @@ impl DockerProvider {
             .spawn()?
             .wait_with_output()
             .await?;
-        let stdout = std::str::from_utf8(&output.stdout).unwrap();
+        let stdout = std::str::from_utf8(&output.stdout).expect("Cannot get container id");
         self.running_containers
             .insert(idx, RunningContainer::new(stdout.to_string(), port));
         Ok(())
@@ -68,7 +70,7 @@ impl DockerProvider {
             .spawn()?
             .wait_with_output()
             .await?;
-        let stdout = std::str::from_utf8(&output.stdout).unwrap();
+        let stdout = std::str::from_utf8(&output.stdout).expect("Cannot get adb connect response");
 
         let expected = format!("connected to {}", address);
         if stdout.contains(&expected) {

@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::time::{Duration, Instant, SystemTime};
+use std::time::{Duration, Instant};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct ExecutionReport {

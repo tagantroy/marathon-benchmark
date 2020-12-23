@@ -25,8 +25,10 @@ impl Runner for SpoonRunner {
         jvm_args: Vec<String>,
         working_dir: PathBuf,
     ) -> Result<(), Box<dyn Error>> {
-        let stderr = File::create(working_dir.join("runner_stderr.txt")).unwrap();
-        let stdout = File::create(working_dir.join("runner_stdout.txt")).unwrap();
+        let stderr = File::create(working_dir.join("runner_stderr.txt"))
+            .expect("Cannot create stderr log file");
+        let stdout = File::create(working_dir.join("runner_stdout.txt"))
+            .expect("Cannot create stdout log file");
         Command::new("java")
             .args(jvm_args)
             .args(vec!["-jar", &self.jar_file])

@@ -2,7 +2,7 @@ use mozdevice::DeviceInfo;
 
 use crate::adb_server::restart_adb_server;
 use crate::benchmark_results::ExecutionReport;
-use crate::config::{Config, DeviceProvider, TestRunner, TestSuite};
+use crate::config::{Config, DeviceProvider, TestRunner};
 use crate::devices::{AvailableOnlyProvider, DockerProvider, LocalEmulatorProvider, Provider};
 use crate::file_manager::FileManager;
 use crate::run_config::RunConfig;
@@ -138,8 +138,8 @@ impl TestSuiteRunner {
 
 fn wait_for_devices(expected: u32) {
     let host = mozdevice::Host::default();
-    let mut devices: Vec<DeviceInfo> = host.devices().unwrap();
+    let mut devices: Vec<DeviceInfo> = host.devices().expect("Cannot get all devices");
     while devices.len() < expected as usize {
-        devices = host.devices().unwrap();
+        devices = host.devices().expect("Cannot get all devices");
     }
 }

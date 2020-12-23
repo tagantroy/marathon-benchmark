@@ -19,7 +19,7 @@ impl LocalEmulatorProvider {
     }
 
     async fn start_emulator(&mut self, idx: u32) -> Result<(), Box<dyn std::error::Error>> {
-        let process = Command::new("/home/ivanbalaksha/Android/Sdk/emulator/emulator")
+        let process = Command::new("emulator")
             .arg("-no-window")
             .arg("-read-only")
             .arg(self.name.clone())

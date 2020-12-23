@@ -23,8 +23,10 @@ impl Tool for FlightRecorder {
 
     fn jvm_args(&self, output_dir: PathBuf) -> Vec<String> {
         let file_path_os_str = output_dir.join("report.jfr").into_os_string();
-        let file_path = file_path_os_str.to_str().unwrap();
-        std::fs::create_dir_all(output_dir);
+        let file_path = file_path_os_str
+            .to_str()
+            .expect("Cannot get filepath as string");
+        std::fs::create_dir_all(output_dir).expect("Cannot create output FlightRecorder");
         let params = format!("-XX:StartFlightRecording=filename={}", file_path);
         vec!["-XX:+FlightRecorder".to_owned(), params]
     }

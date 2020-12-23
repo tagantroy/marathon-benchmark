@@ -1,6 +1,5 @@
 use crate::benchmark_results::ExecutionReport;
 use std::path::{Path, PathBuf};
-use std::time::Duration;
 use uuid::Uuid;
 
 pub struct FileManager {
@@ -99,10 +98,10 @@ mod tests {
         let file_manager =
             FileManager::new(uuid, working_dir.clone(), suite_name.clone(), iteration);
         let run_dir = file_manager.get_run_dir();
-        let run_dir_str = run_dir.to_str().unwrap();
+        let run_dir_str = run_dir.to_str().expect("Cannot convert path to string");
         let expected = &format!(
             "{}/{}/{}/{}",
-            working_dir.to_str().unwrap(),
+            working_dir.to_str().expect("Cannot convert path to string"),
             uuid.to_string(),
             suite_name,
             iteration
@@ -119,10 +118,10 @@ mod tests {
         let file_manager =
             FileManager::new(uuid, working_dir.clone(), suite_name.clone(), iteration);
         let results_dir = file_manager.get_results_dir();
-        let results_dir_str = results_dir.to_str().unwrap();
+        let results_dir_str = results_dir.to_str().expect("Cannot convert path to string");
         let expected = &format!(
             "{}/{}/{}/{}/{}",
-            working_dir.to_str().unwrap(),
+            working_dir.to_str().expect("Cannot convert path to string"),
             uuid.to_string(),
             suite_name,
             iteration,
@@ -139,11 +138,13 @@ mod tests {
         let working_dir = PathBuf::from("/test/marathon/dir");
         let file_manager =
             FileManager::new(uuid, working_dir.clone(), suite_name.clone(), iteration);
-        let results_dir = file_manager.get_results_dir_for_iteration().unwrap();
-        let results_dir_str = results_dir.to_str().unwrap();
+        let results_dir = file_manager
+            .get_results_dir_for_iteration()
+            .expect("Cannot convert path to string");
+        let results_dir_str = results_dir.to_str().expect("Cannot convert path to string");
         let expected = &format!(
             "{}/{}/{}/{}/{}",
-            working_dir.to_str().unwrap(),
+            working_dir.to_str().expect("Cannot convert path to string"),
             uuid.to_string(),
             suite_name,
             iteration,

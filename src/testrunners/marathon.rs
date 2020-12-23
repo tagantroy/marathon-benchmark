@@ -31,13 +31,15 @@ impl Runner for MarathonRunner {
         let config_path = Path::new(&self.marathon_file);
         let config_file_name = config_path
             .file_name()
-            .unwrap()
+            .expect("Cannot get filename")
             .to_os_string()
             .into_string()
-            .unwrap();
+            .expect("File name cannot be converted to string");
 
-        let stderr = File::create(working_dir.join("runner_stderr.txt")).unwrap();
-        let stdout = File::create(working_dir.join("runner_stdout.txt")).unwrap();
+        let stderr = File::create(working_dir.join("runner_stderr.txt"))
+            .expect("Cannot create stderr log file");
+        let stdout = File::create(working_dir.join("runner_stdout.txt"))
+            .expect("Cannot create stdout log file");
 
         Command::new(&self.program)
             .env("MARATHON_OPTS", jvm_args.join(" ")) //
