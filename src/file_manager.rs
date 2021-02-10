@@ -38,14 +38,18 @@ impl FileManager {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let working_dir = self.get_working_dir()?;
 
-        std::fs::create_dir_all(&working_dir)?;
+        std::fs::create_dir_all(&working_dir).expect("Cannot create working dir");
 
-        std::fs::copy(apk, working_dir.join("application.apk"))?;
-        std::fs::copy(test_apk, working_dir.join("test_application.apk"))?;
+        std::fs::copy(apk, working_dir.join("application.apk"))
+            .expect("Cannot copy application.apk");
+        std::fs::copy(test_apk, working_dir.join("test_application.apk"))
+            .expect("Cannot copy test_application.apk");
 
         for f in files {
             let file_name = Path::new(&f).file_name().expect("Expected file name");
-            std::fs::copy(&f, working_dir.join(file_name))?;
+            let dest = working_dir.join(file_name);
+            std::fs::copy(&f, &dest)
+                .expect(format!("Cannot copy file: {} to {:?}", f, &dest).as_str());
         }
         Ok(())
     }

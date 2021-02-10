@@ -3,6 +3,7 @@ mod benchmark_results;
 mod config;
 mod devices;
 mod file_manager;
+mod monitoring;
 mod run_config;
 mod test_suite;
 mod testrunners;

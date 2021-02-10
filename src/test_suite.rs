@@ -5,6 +5,7 @@ use crate::benchmark_results::ExecutionReport;
 use crate::config::{Config, DeviceProvider, TestRunner};
 use crate::devices::{AvailableOnlyProvider, DockerProvider, LocalEmulatorProvider, Provider};
 use crate::file_manager::FileManager;
+use crate::monitoring::{ProcessMonitoring, SystemMonitoring};
 use crate::run_config::RunConfig;
 use crate::testrunners::{ForkRunner, MarathonRunner, Runner, SpoonRunner, SpoonRunner2};
 use crate::tools::{FlightRecorder, Tool};
@@ -78,7 +79,7 @@ impl TestSuiteRunner {
         spinner.set_prefix(&format!("[{}] Iteration #{}", self.name, idx));
 
         let file_manager = FileManager::new(
-            run_config.uuid.clone(),
+            run_config.uuid,
             run_config.working_dir.clone(),
             self.name.clone(),
             idx,
@@ -106,6 +107,12 @@ impl TestSuiteRunner {
         let results_dir = file_manager.get_tools_results_dir(&tool.get_name())?;
         tool.start().await?;
 
+        spinner.set_message("Start monitoring");
+        let process_monitoring = ProcessMonitoring::new();
+        let system_monitoring = SystemMonitoring::new();
+        process_monitoring.start();
+        system_monitoring.start();
+
         spinner.set_message("Run tests");
         let test_run_start = Instant::now();
         let result = self
@@ -113,7 +120,7 @@ impl TestSuiteRunner {
             .start(tool.jvm_args(results_dir), working_dir)
             .await;
         let test_run_end = Instant::now();
-        let report = ExecutionReport::new(test_run_start, test_run_end);
+        let report = ExecutionReport::new(self.name.clone(), idx, test_run_start, test_run_end);
 
         file_manager.save_execution_report(report).await?;
 

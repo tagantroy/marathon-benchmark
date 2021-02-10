@@ -2,8 +2,8 @@ use std::process::Stdio;
 use tokio::process::Command;
 
 pub async fn restart_adb_server() -> Result<(), Box<dyn std::error::Error>> {
-    kill_adb_server().await?;
-    start_adb_server().await?;
+    kill_adb_server().await.expect("Cannot kill adb server");
+    start_adb_server().await.expect("Cannot start adb server");
     Ok(())
 }
 
